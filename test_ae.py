@@ -18,7 +18,7 @@ parser.add_argument('--categories', type=str_list, default=['airplane'])
 parser.add_argument('--save_dir', type=str, default='./results')
 parser.add_argument('--device', type=str, default='cuda')
 # Datasets and loaders
-parser.add_argument('--dataset_path', type=str, default='./data/shapenet.hdf5')
+parser.add_argument('--dataset_path', type=str, default='/content/agora.h5')
 parser.add_argument('--batch_size', type=int, default=128)
 args = parser.parse_args()
 
@@ -31,7 +31,7 @@ for k, v in vars(args).items():
     logger.info('[ARGS::%s] %s' % (k, repr(v)))
 
 # Checkpoint
-ckpt = torch.load(args.ckpt)
+ckpt = torch.load(args.ckpt,weights_only=False)
 seed_all(ckpt['args'].seed)
 
 # Datasets and loaders
@@ -62,7 +62,6 @@ for i, batch in enumerate(tqdm(test_loader)):
 
     ref = ref * scale + shift
     recons = recons * scale + shift
-
     all_ref.append(ref.detach().cpu())
     all_recons.append(recons.detach().cpu())
 
