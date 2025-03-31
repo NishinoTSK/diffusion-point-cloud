@@ -62,6 +62,7 @@ if args.logging:
     writer = torch.utils.tensorboard.SummaryWriter(log_dir)
     ckpt_mgr = CheckpointManager(log_dir)
 else:
+    print("teste")
     logger = get_logger('train', None)
     writer = BlackHole()
     ckpt_mgr = BlackHole()
