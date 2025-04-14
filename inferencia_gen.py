@@ -94,7 +94,7 @@ with torch.no_grad():
     z = torch.randn([args.batch_size, ckpt['args'].latent_dim]).to(args.device)
     x = model.sample(z, args.sample_num_points, flexibility=ckpt['args'].flexibility)
     gen_pcs.append(x.detach().cpu())
-gen_pcs = torch.cat(gen_pcs, dim=0)[:0]
+gen_pcs = torch.cat(gen_pcs, dim=0)[:1]
 if args.normalize is not None:
     gen_pcs = normalize_point_clouds(gen_pcs, mode=args.normalize, logger=logger)
 
