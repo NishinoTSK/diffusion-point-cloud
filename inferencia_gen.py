@@ -45,7 +45,7 @@ parser.add_argument('--batch_size', type=int, default=128)
 # Sampling
 parser.add_argument('--sample_num_points', type=int, default=1024)
 parser.add_argument('--normalize', type=str, default='shape_bbox', choices=[None, 'shape_unit', 'shape_bbox'])
-parser.add_argument('--seed', type=int, default=9988)
+parser.add_argument('--seed', type=int, default=9)
 args = parser.parse_args()
 
 
@@ -90,11 +90,14 @@ model.load_state_dict(ckpt['state_dict'])
 
 # Generate Point Clouds
 gen_pcs = []
-with torch.no_grad():
-    z = torch.randn([args.batch_size, ckpt['args'].latent_dim]).to(args.device)
-    x = model.sample(z, args.sample_num_points, flexibility=ckpt['args'].flexibility)
-    gen_pcs.append(x.detach().cpu())
-gen_pcs = torch.cat(gen_pcs, dim=0)[:1]
+auxiliar = 0
+while auxiliar < 5:
+  with torch.no_grad():
+      z = torch.randn([args.batch_size, ckpt['args'].latent_dim]).to(args.device)
+      x = model.sample(z, args.sample_num_points, flexibility=ckpt['args'].flexibility)
+      gen_pcs.append(x.detach().cpu())
+      auxiliar = auxiliar + 1
+gen_pcs = torch.cat(gen_pcs, dim=0)[:auxiliar]
 if args.normalize is not None:
     gen_pcs = normalize_point_clouds(gen_pcs, mode=args.normalize, logger=logger)
 
