@@ -50,12 +50,12 @@ args = parser.parse_args()
 
 
 # Logging
-# save_dir = os.path.join(args.save_dir, 'GEN_Ours_%s_%d' % ('_'.join(args.categories), int(time.time())) )
-# if not os.path.exists(save_dir):
-#     os.makedirs(save_dir)
-# logger = get_logger('test', save_dir)
-# for k, v in vars(args).items():
-#     logger.info('[ARGS::%s] %s' % (k, repr(v)))
+save_dir = os.path.join(args.save_dir, 'GEN_Ours_%s_%d' % ('_'.join(args.categories), int(time.time())) )
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+logger = get_logger('test', save_dir)
+for k, v in vars(args).items():
+    logger.info('[ARGS::%s] %s' % (k, repr(v)))
 
 # Checkpoint
 ckpt = torch.load(args.ckpt,weights_only=False)
@@ -96,7 +96,7 @@ with torch.no_grad():
     gen_pcs.append(x.detach().cpu())
 gen_pcs = torch.cat(gen_pcs, dim=0)[:0]
 if args.normalize is not None:
-    gen_pcs = normalize_point_clouds(gen_pcs, mode=args.normalize)
+    gen_pcs = normalize_point_clouds(gen_pcs, mode=args.normalize, logger=logger)
 
 # Save
 # logger.info('Saving point clouds...')
